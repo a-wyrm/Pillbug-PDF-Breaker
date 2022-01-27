@@ -4,14 +4,14 @@
   }
   
   .top-bar {
-    background: #333;
-    color: #fff;
+    background: rgb(250, 227, 255);
+    color: rgb(0, 0, 0);
     padding: 1rem;
   }
   
   .btn {
-    background: coral;
-    color: #fff;
+    background: rgb(179, 255, 255);
+    color: rgb(0, 0, 0);
     border: none;
     outline: none;
     cursor: pointer;
