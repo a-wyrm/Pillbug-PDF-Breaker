@@ -1,0 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .top-bar {
+    background: rgb(250, 227, 255);
+    color: rgb(0, 0, 0);
+    padding: 1rem;
+  }
+  
+  .btn {
+    background: rgb(179, 255, 255);
+    color: rgb(0, 0, 0);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0.7rem 2rem;
+  }
+  
+  .btn:hover {
+    opacity: 0.9;
+  }
+  
+  .page-info {
+    margin-left: 1rem;
+  }
+  
+  .error {
+    background: orangered;
+    color: #fff;
+    padding: 1rem;
+  }
