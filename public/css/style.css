@@ -4,30 +4,36 @@
   }
   
   .top-bar {
-    background: rgb(250, 227, 255);
+    background: #eebf92;
     color: rgb(0, 0, 0);
     padding: 1rem;
+    margin-bottom: 15px;
   }
   
   .btn {
-    background: rgb(179, 255, 255);
+    background: #fff;
     color: rgb(0, 0, 0);
     border: none;
     outline: none;
     cursor: pointer;
-    padding: 0.7rem 2rem;
   }
-  
-  .btn:hover {
-    opacity: 0.9;
-  }
+
   
   .page-info {
-    margin-left: 1rem;
+    margin-right: 15px;
+    margin-left: 10px;
   }
   
   .error {
     background: orangered;
     color: #fff;
     padding: 1rem;
+  }
+
+  .textBox {
+    margin-right: 15px;
+    position: absolute;
+    right: 0px;
+    width: 45%;
+    height: 85%;
   }
