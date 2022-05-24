@@ -8,8 +8,19 @@
 
 ### UNFINISHED: 
 
+The actual PDF viewer.
+Generating plaintext correctly (with focal points). 
+Regenerating PDF.
+
 ### DONE:
 
+Initial plaintext generation is done.
+Minimal interface (mostly) done.
+
+### POSSIBLE INCLUSIONS:
+
+Image-associator for specific words.
+Settings page (change tint, frequency, etc.)
 
 ## Usage
 
