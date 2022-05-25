@@ -10,7 +10,7 @@ const currentPage = document.getElementById('page-num');
 const viewer = document.querySelector('.canvasBox');
 let currentPDF = {}
 
-// retrieve file and send it to server
+// loading PDF
 
 function resetPDF(){
     currentPDF = {
@@ -19,38 +19,56 @@ function resetPDF(){
         currentPage: 1
     }
 }
+
 function onLoad(data) {
     resetPDF();
     const PDFfile = pdfjsLib.getDocument(data);
-    PDFfile.promise.then (doc => {
+    PDFfile.promise.then ((doc) => {
         currentPDF.file = doc;
         currentPDF.countPage = doc.numPages;
         renderPage();
     });
 }
+
 function renderPage() {
-    currentPDF.file.getPage(currentPDF.currentPage).then((page) => { 
-        var context = viewer.getContext('2d');
-        var viewport = page.getViewport();
-        viewer.height = viewport.height;
+	currentPDF.file.getPage(currentPDF.currentPage).then((page) => {
+        var scale = 1;
+		var context = viewer.getContext('2d');
+		var viewport = page.getViewport({ scale: scale,});
+		viewer.height = viewport.height;
 		viewer.width = viewport.width;
 
-        var renderContext = {
+		var renderContext = {
 			canvasContext: context,
 			viewport: viewport
 		};
-
-        page.render(renderContext);
-    });
+		page.render(renderContext);
+	});
+	currentPage.innerHTML = currentPDF.currentPage + ' of ' + currentPDF.countPage;
 }
 
 
+// buttons
+document.getElementById('next-page').addEventListener('click', () => {
+	const validPage = currentPDF.currentPage < currentPDF.countPage;
+	if (validPage) {
+		currentPDF.currentPage += 1;
+		renderPage();
+	}
+});
 
+document.getElementById('prev-page').addEventListener('click', () => {
+	const validPage = currentPDF.currentPage - 1 > 0;
+	if (validPage) {
+		currentPDF.currentPage -= 1;
+		renderPage();
+	}
+});
 
 genBut.addEventListener('click', () => {
     const inputFile = fileInput.files[0];
 
-    if (inputFile == 'application/pdf'){
+    if (inputFile.type !== "application/pdf"){
         alert("Please use a PDF file!")
     }
     else {

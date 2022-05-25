@@ -35,13 +35,13 @@
     position: absolute;
     right: 0px;
     width: 45%;
-    height: 85%;
+    height: 90%;
   }
 
   .canvasBox {
     margin-left: 15px;
-    width: 50%;
-    height: 85%;
+    width: 45%;
+    height: 90%;
     position: absolute;
-    background-color: red;
+    background-color: rgb(148, 148, 148);
   }
