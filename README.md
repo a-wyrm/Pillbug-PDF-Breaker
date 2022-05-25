@@ -4,17 +4,17 @@
 
 ## Progress & Current Work
 
-![](https://us-central1-progress-markdown.cloudfunctions.net/progress/15)
+![](https://us-central1-progress-markdown.cloudfunctions.net/progress/25)
 
 ### UNFINISHED: 
 
-The actual PDF viewer.
 Generating plaintext correctly (with focal points). 
 Regenerating PDF.
 
 ### DONE:
 
 Initial plaintext generation is done.
+PDF viewer done.
 Minimal interface (mostly) done.
 
 ### POSSIBLE INCLUSIONS:
