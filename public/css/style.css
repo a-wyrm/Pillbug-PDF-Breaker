@@ -37,3 +37,11 @@
     width: 45%;
     height: 85%;
   }
+
+  .canvasBox {
+    margin-left: 15px;
+    width: 50%;
+    height: 85%;
+    position: absolute;
+    background-color: red;
+  }

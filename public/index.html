@@ -13,62 +13,46 @@
     crossorigin="anonymous">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
-    
     <link rel="stylesheet" href="css/style.css" type="text/css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js" 
+    integrity="sha512-dw+7hmxlGiOvY3mCnzrPT5yoUwN/MRjVgYV7HGXqsiXnZeqsw1H9n9lsnnPu4kL2nx2bnrjFcuWK+P3lshekwQ==" 
+    crossorigin="anonymous" 
+    referrerpolicy="no-referrer"></script>
     
     <title>Pillbug PDF Breaker</title>
 </head>
 <body>
 
+    <!-- Top bar -->
     <div class = "top-bar">
-
         <button class = "btn" id = "prev-page">
             <i class = "bi bi-arrow-left-circle-fill"></i> Previous Page
         </button>
-
         <button class = "btn" id = "next-page">
             Next Page <i class = "bi bi-arrow-right-circle-fill"></i>
         </button>
-
         <span class = "page-info">
-            Page <span id = "page-num"> 0 </span> of <span id = "page-count"> 0 </span>
+            Page <span id = "page-num"> 0 of 0 </span>
         </span>
-
 
         <span class = "button">
             <input type="file" name="file" id="fileInput">
-            <button class = "btn" type="button"><i class="bi bi-book-fill"></i> Generate</button>
+            <button class = "btn" type="button" id="genBut"><i class="bi bi-book-fill"></i> Generate</button>
             <button class="btn" type="button" id="uploadBut"><i class="bi bi-file-earmark-text-fill"></i> Plaintext</button>
         </span>
-    
     </div>
 
+    <div>
+        <canvas class="canvasBox"></canvas>
+    </div>
+
+    <!-- Plaintext area-->
     <div>
         <textarea class="textBox" id="textRes" placeholder="Plaintext goes here..."></textarea>
     </div>
 
-    <script>
-        const fileInput = document.getElementById("fileInput");
-        const uploadBut = document.getElementById("uploadBut");
-        const textRes = document.getElementById("textRes");
-
-        // retrieve file and send it to server
-
-        uploadBut.addEventListener("click", () => {
-            const formData = new FormData();
-
-            formData.append("pdfFile", fileInput.files[0]);
-
-            fetch("/extract-text", {
-                method: "POST",
-                body: formData
-            }).then(response => {
-                return response.text();
-            }).then(extractedText => {
-                textRes.value = extractedText.trim();
-            });
-        });
-    </script>
+    <script src="main.js"></script>
         
 
     <canvas id="pdf-render"></canvas>
