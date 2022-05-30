@@ -1,6 +1,6 @@
 # Pillbug
 
-"Pillbug" is the name of a project that is designed to help people better concentrate on reading. It does this by taking a PDF provided by the user, turns it into plaintext, highlights the [focal points](https://bionic-reading.com/about/) of each word, and turns it back into a reconstructed PDF. This is a work-in-progress project.
+"Pillbug" is the name of a project that is designed to help people better concentrate on reading. It does this by taking a PDF provided by the user, deconstructing its contents, and allowing the user to customize their app to their preference. This is a work-in-progress project.
 
 ## Progress & Current Work
 
