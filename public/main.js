@@ -11,7 +11,6 @@ const viewer = document.querySelector('.canvasBox');
 let currentPDF = {}
 
 // loading PDF
-
 function resetPDF(){
     currentPDF = {
         file: null,
@@ -93,5 +92,13 @@ uploadBut.addEventListener("click", () => {
         return response.text();
     }).then(extractedText => {
         textRes.value = extractedText.trim();
+    });
+});
+
+// for generating PDF
+genPDF.addEventListener("click", () => {
+    fetch("/get-PDF", {
+        method: "POST"
+        //body: {value: value, }
     });
 });
