@@ -5,22 +5,22 @@
 
 ## Progress & Current Work
 
-![](https://us-central1-progress-markdown.cloudfunctions.net/progress/25)
+![](https://us-central1-progress-markdown.cloudfunctions.net/progress/30)
 
 ### UNFINISHED: 
 
-Generating plaintext correctly (with focal points). 
-Regenerating PDF.
+Regenerating PDF with user-defined settings.
 
 ### DONE:
 
-Initial plaintext generation is done.
-PDF viewer done.
-Minimal interface (mostly) done.
+Initial plaintext generation is done. <br />
+PDF viewer done. <br />
+Minimal interface (mostly) done. <br />
+Hummus-recipe integrated with base-PDF generation features.
 
 ### POSSIBLE INCLUSIONS:
 
-Image-associator for specific words.
+Image-associator for specific words. <br />
 Settings page (change tint, frequency, etc.)
 
 ## Usage
