@@ -97,8 +97,18 @@ uploadBut.addEventListener("click", () => {
 
 // for generating PDF
 genPDF.addEventListener("click", () => {
+    
+    const formPDFData = new FormData();
+    formPDFData.append("pdfFile", textRes.value);
+    const plainFormData = Object.fromEntries(formPDFData.entries());
+	const formString = JSON.stringify(plainFormData);
+
     fetch("/get-PDF", {
-        method: "POST"
-        //body: {value: value, }
+        method: "POST",
+        headers: {
+			"Content-Type": "application/json",
+			"Accept": "application/json"
+		},
+        body: formString
     });
 });

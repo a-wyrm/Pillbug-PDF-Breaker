@@ -1,23 +1,25 @@
 const express = require("express");
 const fileUpload = require("express-fileupload");
 const pdfParse = require("pdf-parse");
+const bodyParser = require("body-parser");
 
 // for hummus
 const HummusRecipe = require('hummus-recipe');
 
 // app
-
 const app = express();
+app.use(bodyParser.json());
 app.use("/", express.static("public"));
 app.use(express.static(__dirname + '/css'));
 
 
 app.post("/get-PDF", (req, res) =>{
   const pdfDoc = new HummusRecipe('new', Date.now() + '.pdf');
+  //console.log(req.body.pdfFile);
   pdfDoc
       // 1st Page
       .createPage('letter-size')
-      .text('Welcome to Hummus-Recipe', 'center', 250, {
+      .text(req.body.pdfFile, 'center', 250, {
           color: '#066099',
           fontSize: 30,
           bold: true,
@@ -39,14 +41,14 @@ app.post("/get-PDF", (req, res) =>{
 
 app.use(fileUpload());
 app.post("/extract-text", (req, res) => {
-  if (!req.files && !req.files.pdfFile) {
-      res.status(400);
-      res.end();
-  }
-
-  pdfParse(req.files.pdfFile).then(result => {
-      res.send(result.text);
-  });
+    //console.log(req.files.pdfFile);
+    if (!req.files && !req.files.pdfFile) {
+        res.status(400);
+        res.end();
+    }
+    pdfParse(req.files.pdfFile).then(result => {
+        res.send(result.text);
+    });
 });
 
 
