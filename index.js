@@ -21,7 +21,7 @@ app.post("/get-PDF", (req, res) =>{
       .createPage('letter-size')
       .text(req.body.pdfFile, 'center', 250, {
           color: '#066099',
-          fontSize: 30,
+          fontSize: 12,
           bold: true,
           font: 'Helvatica',
           align: 'center center',

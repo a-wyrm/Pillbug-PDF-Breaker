@@ -11,10 +11,14 @@ const viewer = document.querySelector('.canvasBox');
 let currentPDF = {}
 
 // loading PDF
+
+// TODO: 
+// Get font, images?
 function resetPDF(){
     currentPDF = {
         file: null,
         countPage: 0,
+        font: "0",
         currentPage: 1
     }
 }
@@ -31,6 +35,8 @@ function onLoad(data) {
 
 function renderPage() {
 	currentPDF.file.getPage(currentPDF.currentPage).then((page) => {
+        console.log(page.getOperatorList());
+        console.log(page.commonObjs);
         var scale = 1;
 		var context = viewer.getContext('2d');
 		var viewport = page.getViewport({ scale: scale,});
