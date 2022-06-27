@@ -14,6 +14,9 @@ let currentPDF = {}
 
 // TODO: 
 // Get font, images?
+let pdfFont = "";
+
+
 function resetPDF(){
     currentPDF = {
         file: null,
@@ -36,7 +39,56 @@ function onLoad(data) {
 function renderPage() {
 	currentPDF.file.getPage(currentPDF.currentPage).then((page) => {
         console.log(page.getOperatorList());
-        console.log(page.commonObjs);
+        
+        
+        var ctx = document.createElement('canvas').getContext('2d', { alpha: false });
+        var pageContainer = document.createElement('div');
+
+        page.getTextContent().then(function (textContent) {
+            textContent.items.forEach(function (textItem) {
+
+                var tx = pdfjsLib.Util.transform(pdfjsLib.Util.transform(viewport.transform, textItem.transform), [1, 0, 0, -1, 0, 0]);
+                var style = textContent.styles[textItem.fontName];
+                var fontSize = Math.sqrt((tx[2] * tx[2]) + (tx[3] * tx[3]));
+        
+                if (style.ascent){ 
+                    tx[5] -= fontSize * style.ascent;
+                } 
+                else if (style.descent) { 
+                    tx[5] -= fontSize * (1 + style.descent);
+                } 
+                else {
+                    tx[5] -= fontSize / 2;
+                }
+                
+                // adjust for rendered width
+                if (textItem.width > 0) {
+
+                    ctx.font = tx[0] + 'px ' + style.fontFamily;   
+                    var width = ctx.measureText(textItem.str).width;
+
+                    if (width > 0) {
+                        tx[0] = (textItem.width * viewport.scale) / width;
+                    }
+                }
+        
+                var item = document.createElement('span');
+                item.textContent = textItem.str;
+                item.style.fontFamily = style.fontFamily;
+
+                item.style.fontSize = fontSize + 'px';
+                item.style.transform = 'scaleX(' + tx[0] + ')';
+                item.style.left = tx[4] + 'px';
+                item.style.top = tx[5] + 'px';
+
+                console.log(item);
+
+
+                //
+                pdfFont = style.fontFamily;
+            });
+        });
+
         var scale = 1;
 		var context = viewer.getContext('2d');
 		var viewport = page.getViewport({ scale: scale,});
@@ -54,6 +106,8 @@ function renderPage() {
 
 
 // buttons
+
+// Next page button
 document.getElementById('next-page').addEventListener('click', () => {
 	const validPage = currentPDF.currentPage < currentPDF.countPage;
 	if (validPage) {
@@ -62,6 +116,8 @@ document.getElementById('next-page').addEventListener('click', () => {
 	}
 });
 
+
+// Previous page button
 document.getElementById('prev-page').addEventListener('click', () => {
 	const validPage = currentPDF.currentPage - 1 > 0;
 	if (validPage) {
@@ -70,6 +126,7 @@ document.getElementById('prev-page').addEventListener('click', () => {
 	}
 });
 
+// add PDF
 genBut.addEventListener('click', () => {
     const inputFile = fileInput.files[0];
 
@@ -85,7 +142,7 @@ genBut.addEventListener('click', () => {
     }
 });
 
-// for plaintext
+// add plaintext
 uploadBut.addEventListener("click", () => {
     const formData = new FormData();
 
@@ -106,6 +163,9 @@ genPDF.addEventListener("click", () => {
     
     const formPDFData = new FormData();
     formPDFData.append("pdfFile", textRes.value);
+    formPDFData.append("pdfFont", pdfFont);
+
+    // convert formPDFData to string
     const plainFormData = Object.fromEntries(formPDFData.entries());
 	const formString = JSON.stringify(plainFormData);
 

@@ -15,7 +15,7 @@ app.use(express.static(__dirname + '/css'));
 
 app.post("/get-PDF", (req, res) =>{
   const pdfDoc = new HummusRecipe('new', Date.now() + '.pdf');
-  //console.log(req.body.pdfFile);
+  console.log(req.body.pdfFont);
   pdfDoc
       // 1st Page
       .createPage('letter-size')
