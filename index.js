@@ -17,13 +17,14 @@ app.post("/get-PDF", (req, res) =>{
   const pdfDoc = new HummusRecipe('new', Date.now() + '.pdf');
   console.log(req.body.pdfFont);
   pdfDoc
+        // will need to create for loop to iterate every page
       // 1st Page
       .createPage('letter-size')
       .text(req.body.pdfFile, 'center', 250, {
           color: '#066099',
           fontSize: 12,
           bold: true,
-          font: 'Helvatica',
+          font: 'sans-serif',
           align: 'center center',
           opacity: 0.8
       })

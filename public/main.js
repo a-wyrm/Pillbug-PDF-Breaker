@@ -14,6 +14,11 @@ let currentPDF = {}
 
 // TODO: 
 // Get font, images?
+
+// previous properties object:
+// keys like font family, font size. if text is similar enough to previous object, append
+// otherwise, make new object
+
 let pdfFont = "";
 
 
@@ -159,6 +164,7 @@ uploadBut.addEventListener("click", () => {
 });
 
 // for generating PDF
+// mutable list? use standard array if you canp
 genPDF.addEventListener("click", () => {
     
     const formPDFData = new FormData();
