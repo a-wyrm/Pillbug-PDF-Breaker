@@ -13,26 +13,30 @@ let currentPDF = {}
 // loading PDF
 
 // TODO: 
-// Get font, images?
+// Get images
 
 // previous properties object:
 // keys like font family, font size. if text is similar enough to previous object, append
 // otherwise, make new object
 
 let pdfFont = "";
-
+let pdfSent = "";
+let textLeft = 0;
+let textTop = 0;
+let textSize = 0;
 
 function resetPDF(){
     currentPDF = {
         file: null,
         countPage: 0,
-        font: "0",
         currentPage: 1
     }
 }
 
 function onLoad(data) {
+    // resets pdf
     resetPDF();
+
     const PDFfile = pdfjsLib.getDocument(data);
     PDFfile.promise.then ((doc) => {
         currentPDF.file = doc;
@@ -43,13 +47,14 @@ function onLoad(data) {
 
 function renderPage() {
 	currentPDF.file.getPage(currentPDF.currentPage).then((page) => {
-        console.log(page.getOperatorList());
+        //console.log(page.getOperatorList());
         
         
         var ctx = document.createElement('canvas').getContext('2d', { alpha: false });
         var pageContainer = document.createElement('div');
 
         page.getTextContent().then(function (textContent) {
+            
             textContent.items.forEach(function (textItem) {
 
                 var tx = pdfjsLib.Util.transform(pdfjsLib.Util.transform(viewport.transform, textItem.transform), [1, 0, 0, -1, 0, 0]);
@@ -85,12 +90,17 @@ function renderPage() {
                 item.style.transform = 'scaleX(' + tx[0] + ')';
                 item.style.left = tx[4] + 'px';
                 item.style.top = tx[5] + 'px';
+                
+                console.log(textItem.str);
 
-                console.log(item);
 
-
-                //
+                // assign global variables
                 pdfFont = style.fontFamily;
+                pdfSent = textItem.str;
+                textSize = fontSize;
+                textLeft = tx[4];
+                textTop = tx[5];
+
             });
         });
 
@@ -164,12 +174,15 @@ uploadBut.addEventListener("click", () => {
 });
 
 // for generating PDF
-// mutable list? use standard array if you canp
+// mutable list? use standard array if you can
 genPDF.addEventListener("click", () => {
     
     const formPDFData = new FormData();
     formPDFData.append("pdfFile", textRes.value);
-    formPDFData.append("pdfFont", pdfFont);
+    formPDFData.append("pdfSent", pdfSent);
+    formPDFData.append("textSize", textSize);
+    formPDFData.append("textLeft", textLeft);
+    formPDFData.append("textTop", textTop);
 
     // convert formPDFData to string
     const plainFormData = Object.fromEntries(formPDFData.entries());

@@ -15,25 +15,25 @@ app.use(express.static(__dirname + '/css'));
 
 app.post("/get-PDF", (req, res) =>{
   const pdfDoc = new HummusRecipe('new', Date.now() + '.pdf');
-  console.log(req.body.pdfFont);
+  console.log(req.body.pdfSent);
+  console.log(req.body.textSize);
   pdfDoc
         // will need to create for loop to iterate every page
       // 1st Page
       .createPage('letter-size')
-      .text(req.body.pdfFile, 'center', 250, {
+      .text(req.body.pdfSent, parseFloat(req.body.textLeft), parseFloat(req.body.textTop), {
           color: '#066099',
-          fontSize: 12,
+          fontSize: parseFloat(req.body.textSize),
           bold: true,
-          font: 'sans-serif',
-          align: 'center center',
+          font: req.body.pdfFont,
           opacity: 0.8
       })
       .endPage()
       
       // 2nd page
-      .createPage('A4', 90)
-      .circle(150, 150, 300)
-      .endPage()
+      //.createPage('A4', 90)
+      //.circle(150, 150, 300)
+      //.endPage()
       // end and save
       .endPDF(()=>{});
 
