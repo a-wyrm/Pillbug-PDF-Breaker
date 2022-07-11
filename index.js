@@ -15,29 +15,35 @@ app.use(express.static(__dirname + '/css'));
 
 app.post("/get-PDF", (req, res) =>{
   const pdfDoc = new HummusRecipe('new', Date.now() + '.pdf');
-  console.log(req.body.pdfSent);
-  console.log(req.body.textSize);
+  
+  //console.log(req.body.length);
+  //console.log(req.body[0].pdfFont);
+  
   pdfDoc
-        // will need to create for loop to iterate every page
-      // 1st Page
-      .createPage('letter-size')
-      .text(req.body.pdfSent, parseFloat(req.body.textLeft), parseFloat(req.body.textTop), {
-          color: '#066099',
-          fontSize: parseFloat(req.body.textSize),
-          bold: true,
-          font: req.body.pdfFont,
-          opacity: 0.8
-      })
-      .endPage()
-      
-      // 2nd page
-      //.createPage('A4', 90)
-      //.circle(150, 150, 300)
-      //.endPage()
-      // end and save
-      .endPDF(()=>{});
+    // will need to create for loop to iterate every page
+    // 1st Page
+    .createPage('legal')
 
-      //req.body....
+    for (let i = 0; i < req.body.length; i++){
+        pdfDoc.text(req.body[i].pdfSent, parseFloat(req.body[i].textLeft), parseFloat(req.body[i].textTop), {
+            color: '#066099',
+            fontSize: parseFloat(req.body[i].textSize),
+            bold: true,
+            font: req.body[i].pdfFont,
+            opacity: 0.8
+        })
+    }
+    
+    pdfDoc.endPage()
+    
+    // 2nd page
+    //.createPage('A4', 90)
+    //.circle(150, 150, 300)
+    //.endPage()
+    // end and save
+    .endPDF(()=>{});
+
+    //req.body....
 });
 
 app.use(fileUpload());

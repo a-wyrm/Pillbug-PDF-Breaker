@@ -13,17 +13,16 @@ let currentPDF = {}
 // loading PDF
 
 // TODO: 
-// Get images
-
-// previous properties object:
-// keys like font family, font size. if text is similar enough to previous object, append
-// otherwise, make new object
+// Get images?
 
 let pdfFont = "";
 let pdfSent = "";
 let textLeft = 0;
 let textTop = 0;
 let textSize = 0;
+
+const listofFD = [];
+
 
 function resetPDF(){
     currentPDF = {
@@ -91,8 +90,7 @@ function renderPage() {
                 item.style.left = tx[4] + 'px';
                 item.style.top = tx[5] + 'px';
                 
-                console.log(textItem.str);
-
+                //console.log(textItem.str);
 
                 // assign global variables
                 pdfFont = style.fontFamily;
@@ -100,6 +98,19 @@ function renderPage() {
                 textSize = fontSize;
                 textLeft = tx[4];
                 textTop = tx[5];
+
+                // for list
+                let textProp = {};
+
+                textProp.pdfFont = pdfFont;
+                textProp.pdfSent = pdfSent;
+                textProp.textSize = textSize;
+                textProp.textLeft = textLeft;
+                textProp.textTop = textTop;
+
+                //console.log(textProp);
+                listofFD.push(textProp);
+
 
             });
         });
@@ -173,21 +184,25 @@ uploadBut.addEventListener("click", () => {
     });
 });
 
+
 // for generating PDF
-// mutable list? use standard array if you can
+// mutable array that formdata keeps getting added onto 
 genPDF.addEventListener("click", () => {
     
-    const formPDFData = new FormData();
-    formPDFData.append("pdfFile", textRes.value);
-    formPDFData.append("pdfSent", pdfSent);
-    formPDFData.append("textSize", textSize);
-    formPDFData.append("textLeft", textLeft);
-    formPDFData.append("textTop", textTop);
+    //const formPDFData = new FormData();
+    //formPDFData.append("pdfFile", textRes.value);
+    //formPDFData.append("pdfSent", pdfSent);
+    //formPDFData.append("textSize", textSize);
+    //formPDFData.append("textLeft", textLeft);
+    //formPDFData.append("textTop", textTop);
+
+
 
     // convert formPDFData to string
-    const plainFormData = Object.fromEntries(formPDFData.entries());
-	const formString = JSON.stringify(plainFormData);
+    console.log(listofFD.length);
+    const formString = JSON.stringify(listofFD);
 
+    // gonna have to create a loopz
     fetch("/get-PDF", {
         method: "POST",
         headers: {
