@@ -13,7 +13,7 @@ let currentPDF = {}
 // loading PDF
 
 // TODO: 
-// Get images?
+// Allow user to update word properties
 
 let pdfFont = "";
 let pdfSent = "";
@@ -21,6 +21,7 @@ let textLeft = 0;
 let textTop = 0;
 let textSize = 0;
 
+// list we send to server to process
 const listofFD = [];
 
 
@@ -45,15 +46,14 @@ function onLoad(data) {
 }
 
 function renderPage() {
-	currentPDF.file.getPage(currentPDF.currentPage).then((page) => {
-        //console.log(page.getOperatorList());
-        
+	currentPDF.file.getPage(currentPDF.currentPage).then((page) => {        
         
         var ctx = document.createElement('canvas').getContext('2d', { alpha: false });
-        var pageContainer = document.createElement('div');
+        //var pageContainer = document.createElement('div');
 
         page.getTextContent().then(function (textContent) {
             
+            // for loop
             textContent.items.forEach(function (textItem) {
 
                 var tx = pdfjsLib.Util.transform(pdfjsLib.Util.transform(viewport.transform, textItem.transform), [1, 0, 0, -1, 0, 0]);
@@ -102,14 +102,18 @@ function renderPage() {
                 // for list
                 let textProp = {};
 
+                textProp.pdfNumofPages = currentPDF.countPage;
                 textProp.pdfFont = pdfFont;
                 textProp.pdfSent = pdfSent;
                 textProp.textSize = textSize;
                 textProp.textLeft = textLeft;
                 textProp.textTop = textTop;
+                textProp.pdfPage = currentPDF.currentPage;
 
-                //console.log(textProp);
+                console.log(textProp);
                 listofFD.push(textProp);
+
+                //console.log(currentPDF.getPage);
 
 
             });
@@ -127,12 +131,12 @@ function renderPage() {
 		};
 		page.render(renderContext);
 	});
+
 	currentPage.innerHTML = currentPDF.currentPage + ' of ' + currentPDF.countPage;
 }
 
 
 // buttons
-
 // Next page button
 document.getElementById('next-page').addEventListener('click', () => {
 	const validPage = currentPDF.currentPage < currentPDF.countPage;
@@ -142,7 +146,6 @@ document.getElementById('next-page').addEventListener('click', () => {
 	}
 });
 
-
 // Previous page button
 document.getElementById('prev-page').addEventListener('click', () => {
 	const validPage = currentPDF.currentPage - 1 > 0;
@@ -151,7 +154,6 @@ document.getElementById('prev-page').addEventListener('click', () => {
 		renderPage();
 	}
 });
-
 // add PDF
 genBut.addEventListener('click', () => {
     const inputFile = fileInput.files[0];
@@ -189,17 +191,8 @@ uploadBut.addEventListener("click", () => {
 // mutable array that formdata keeps getting added onto 
 genPDF.addEventListener("click", () => {
     
-    //const formPDFData = new FormData();
-    //formPDFData.append("pdfFile", textRes.value);
-    //formPDFData.append("pdfSent", pdfSent);
-    //formPDFData.append("textSize", textSize);
-    //formPDFData.append("textLeft", textLeft);
-    //formPDFData.append("textTop", textTop);
-
-
-
     // convert formPDFData to string
-    console.log(listofFD.length);
+    //console.log(listofFD);
     const formString = JSON.stringify(listofFD);
 
     // gonna have to create a loopz

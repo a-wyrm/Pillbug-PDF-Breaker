@@ -16,34 +16,38 @@ app.use(express.static(__dirname + '/css'));
 app.post("/get-PDF", (req, res) =>{
   const pdfDoc = new HummusRecipe('new', Date.now() + '.pdf');
   
-  //console.log(req.body.length);
-  //console.log(req.body[0].pdfFont);
+  // number of pages for pdf.
+  let PageC = req.body[0].pdfNumofPages;
+
+  let currentLine = 0;
   
   pdfDoc
     // will need to create for loop to iterate every page
-    // 1st Page
-    .createPage('legal')
-
-    for (let i = 0; i < req.body.length; i++){
-        pdfDoc.text(req.body[i].pdfSent, parseFloat(req.body[i].textLeft), parseFloat(req.body[i].textTop), {
-            color: '#066099',
-            fontSize: parseFloat(req.body[i].textSize),
-            bold: true,
-            font: req.body[i].pdfFont,
-            opacity: 0.8
-        })
+    // send page amount, will need to break out of for loop
+    for ( let j = 1; j <= PageC; j++){
+    
+        pdfDoc.createPage('legal')
+        // change i to be currentline and set currentline = to i when break
+        for (let i = currentLine; i < req.body.length; i++){
+            // if we are at a new to a new page
+            if (req.body[i].pdfPage > j){
+                currentLine = i;
+                break;
+            }
+            else{
+                // we'll need to keep track of i
+                pdfDoc.text(req.body[i].pdfSent, parseFloat(req.body[i].textLeft), parseFloat(req.body[i].textTop), {
+                    color: '#066099',
+                    fontSize: parseFloat(req.body[i].textSize),
+                    bold: true,
+                    font: req.body[i].pdfFont,
+                    opacity: 0.8
+                })
+            }
+        }
+        pdfDoc.endPage()
     }
-    
-    pdfDoc.endPage()
-    
-    // 2nd page
-    //.createPage('A4', 90)
-    //.circle(150, 150, 300)
-    //.endPage()
-    // end and save
-    .endPDF(()=>{});
-
-    //req.body....
+    pdfDoc.endPDF(()=>{});
 });
 
 app.use(fileUpload());
