@@ -8,7 +8,7 @@ const HummusRecipe = require('hummus-recipe');
 
 // app
 const app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use("/", express.static("public"));
 app.use(express.static(__dirname + '/css'));
 
@@ -47,6 +47,7 @@ app.post("/get-PDF", (req, res) =>{
         }
         pdfDoc.endPage()
     }
+    PageC = 0;
     pdfDoc.endPDF(()=>{});
 });
 

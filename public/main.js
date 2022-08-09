@@ -21,9 +21,12 @@ let textLeft = 0;
 let textTop = 0;
 let textSize = 0;
 
+let scale = 1;
+let viewport;
+let ctx;
+
 // list we send to server to process
 const listofFD = [];
-
 
 function resetPDF(){
     currentPDF = {
@@ -42,86 +45,18 @@ function onLoad(data) {
         currentPDF.file = doc;
         currentPDF.countPage = doc.numPages;
         renderPage();
+        getPTProperties();
+        
     });
+
 }
 
 function renderPage() {
 	currentPDF.file.getPage(currentPDF.currentPage).then((page) => {        
         
-        var ctx = document.createElement('canvas').getContext('2d', { alpha: false });
-        //var pageContainer = document.createElement('div');
-
-        page.getTextContent().then(function (textContent) {
-            
-            // for loop
-            textContent.items.forEach(function (textItem) {
-
-                var tx = pdfjsLib.Util.transform(pdfjsLib.Util.transform(viewport.transform, textItem.transform), [1, 0, 0, -1, 0, 0]);
-                var style = textContent.styles[textItem.fontName];
-                var fontSize = Math.sqrt((tx[2] * tx[2]) + (tx[3] * tx[3]));
-        
-                if (style.ascent){ 
-                    tx[5] -= fontSize * style.ascent;
-                } 
-                else if (style.descent) { 
-                    tx[5] -= fontSize * (1 + style.descent);
-                } 
-                else {
-                    tx[5] -= fontSize / 2;
-                }
-                
-                // adjust for rendered width
-                if (textItem.width > 0) {
-
-                    ctx.font = tx[0] + 'px ' + style.fontFamily;   
-                    var width = ctx.measureText(textItem.str).width;
-
-                    if (width > 0) {
-                        tx[0] = (textItem.width * viewport.scale) / width;
-                    }
-                }
-        
-                var item = document.createElement('span');
-                item.textContent = textItem.str;
-                item.style.fontFamily = style.fontFamily;
-
-                item.style.fontSize = fontSize + 'px';
-                item.style.transform = 'scaleX(' + tx[0] + ')';
-                item.style.left = tx[4] + 'px';
-                item.style.top = tx[5] + 'px';
-                
-                //console.log(textItem.str);
-
-                // assign global variables
-                pdfFont = style.fontFamily;
-                pdfSent = textItem.str;
-                textSize = fontSize;
-                textLeft = tx[4];
-                textTop = tx[5];
-
-                // for list
-                let textProp = {};
-
-                textProp.pdfNumofPages = currentPDF.countPage;
-                textProp.pdfFont = pdfFont;
-                textProp.pdfSent = pdfSent;
-                textProp.textSize = textSize;
-                textProp.textLeft = textLeft;
-                textProp.textTop = textTop;
-                textProp.pdfPage = currentPDF.currentPage;
-
-                console.log(textProp);
-                listofFD.push(textProp);
-
-                //console.log(currentPDF.getPage);
-
-
-            });
-        });
-
-        var scale = 1;
+        ctx = document.createElement('canvas').getContext('2d', { alpha: false });
 		var context = viewer.getContext('2d');
-		var viewport = page.getViewport({ scale: scale,});
+		viewport = page.getViewport({ scale: scale,});
 		viewer.height = viewport.height;
 		viewer.width = viewport.width;
 
@@ -133,6 +68,81 @@ function renderPage() {
 	});
 
 	currentPage.innerHTML = currentPDF.currentPage + ' of ' + currentPDF.countPage;
+}
+
+function getPTProperties() {
+        for (let i = 1; i <= currentPDF.countPage; i++){
+            currentPDF.file.getPage(i).then((page) => {
+
+                page.getTextContent().then(function (textContent) {
+
+                    textContent.items.forEach(function (textItem) {
+
+                        var tx = pdfjsLib.Util.transform(pdfjsLib.Util.transform(viewport.transform, textItem.transform), [1, 0, 0, -1, 0, 0]);
+                        var style = textContent.styles[textItem.fontName];
+                        var fontSize = Math.sqrt((tx[2] * tx[2]) + (tx[3] * tx[3]));
+                
+                        if (style.ascent){ 
+                            tx[5] -= fontSize * style.ascent;
+                        } 
+                        else if (style.descent) { 
+                            tx[5] -= fontSize * (1 + style.descent);
+                        } 
+                        else {
+                            tx[5] -= fontSize / 2;
+                        }
+                        
+                        // adjust for rendered width
+                        if (textItem.width > 0) {
+
+                            ctx.font = tx[0] + 'px ' + style.fontFamily;   
+                            var width = ctx.measureText(textItem.str).width;
+
+                            if (width > 0) {
+                                tx[0] = (textItem.width * viewport.scale) / width;
+                            }
+                        }
+                
+                        var item = document.createElement('span');
+                        item.textContent = textItem.str;
+                        item.style.fontFamily = style.fontFamily;
+
+                        item.style.fontSize = fontSize + 'px';
+                        item.style.transform = 'scaleX(' + tx[0] + ')';
+                        item.style.left = tx[4] + 'px';
+                        item.style.top = tx[5] + 'px';
+                        
+                        //console.log(textItem.str);
+
+                        // assign global variables
+                        pdfFont = style.fontFamily;
+                        pdfSent = textItem.str;
+                        textSize = fontSize;
+                        textLeft = tx[4];
+                        textTop = tx[5];
+
+                        // for list
+                        let textProp = {};
+
+                        textProp.pdfNumofPages = currentPDF.countPage;
+                        //console.log(currentPDF.countPage);
+                        textProp.pdfFont = pdfFont;
+                        textProp.pdfSent = pdfSent;
+                        textProp.textSize = textSize;
+                        textProp.textLeft = textLeft;
+                        textProp.textTop = textTop;
+
+                        textProp.pdfPage = i;
+
+
+                        console.log(textProp);
+                        listofFD.push(textProp);
+
+                    });
+                });
+        });
+    }
+
 }
 
 
