@@ -135,7 +135,7 @@ function getPTProperties() {
                         textProp.pdfPage = i;
 
 
-                        console.log(textProp);
+                        //console.log(textProp);
                         listofFD.push(textProp);
 
                     });
@@ -185,7 +185,6 @@ uploadBut.addEventListener("click", () => {
     const formData = new FormData();
 
     formData.append("pdfFile", fileInput.files[0]);
-
     fetch("/extract-text", {
         method: "POST",
         body: formData
