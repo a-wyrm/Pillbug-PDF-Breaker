@@ -26,7 +26,7 @@ let viewport;
 let ctx;
 
 // list we send to server to process
-const listofFD = [];
+let listofFD = [];
 
 function resetPDF(){
     currentPDF = {
@@ -34,6 +34,8 @@ function resetPDF(){
         countPage: 0,
         currentPage: 1
     }
+
+    //listofFD = [];
 }
 
 function onLoad(data) {
@@ -201,7 +203,8 @@ uploadBut.addEventListener("click", () => {
 genPDF.addEventListener("click", () => {
     
     // convert formPDFData to string
-    //console.log(listofFD);
+    
+    listofFD.sort((a, b) => (b.pdfPage - a.pdfPage) ? -1 : 1)
     const formString = JSON.stringify(listofFD);
 
     // gonna have to create a loopz
