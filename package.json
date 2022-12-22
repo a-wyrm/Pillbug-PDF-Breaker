@@ -1,7 +1,7 @@
 {
-  "name": "Pillbug-PDF-Breaker",
+  "name": "pillbug-pdf-breaker",
   "version": "1.0.0",
-  "description": "",
+  "description": "\"Pillbug\" is the name of a project that is designed to help people better concentrate on reading. It does this by taking a PDF provided by the user, deconstructing its contents, and allowing the user to customize their PDF to their preference. This is a work-in-progress project.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,7 +11,6 @@
     "type": "git",
     "url": "git+https://github.com/a-wyrm/Pillbug-PDF-Breaker.git"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -19,10 +18,10 @@
   },
   "homepage": "https://github.com/a-wyrm/Pillbug-PDF-Breaker#readme",
   "dependencies": {
-    "body-parser": "^1.20.0",
-    "express": "^4.18.1",
-    "express-fileupload": "^1.3.1",
-    "hummus-recipe": "^2.0.1",
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
+    "muhammara": "^3.5.0",
     "pdf-parse": "^1.1.1"
   }
 }

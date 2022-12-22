@@ -4,7 +4,7 @@ const pdfParse = require("pdf-parse");
 const bodyParser = require("body-parser");
 
 // for hummus
-const HummusRecipe = require('hummus-recipe');
+let muhammara  = require('muhammara');
 
 // app
 const app = express();
@@ -14,41 +14,55 @@ app.use(express.static(__dirname + '/css'));
 
 
 app.post("/get-PDF", (req, res) =>{
-  const pdfDoc = new HummusRecipe('new', Date.now() + '.pdf');
-  
+
+   // we'll need to see how to sort the list and print it out based on that list
   // number of pages for pdf.
   let PageC = req.body[0].pdfNumofPages;
-
   let currentLine = 0;
-  
-  pdfDoc
-    // will need to create for loop to iterate every page
-    // send page amount, will need to break out of for loop
-    for ( let j = 1; j <= PageC; j++){
-    
-        pdfDoc.createPage('legal')
-        // change i to be currentline and set currentline = to i when break
-        for (let i = currentLine; i < req.body.length; i++){
-            // if we are at a new to a new page
-            if (req.body[i].pdfPage > j){
-                currentLine = i;
-                break;
-            }
-            else{
-                // we'll need to keep track of i
-                pdfDoc.text(req.body[i].pdfSent, parseFloat(req.body[i].textLeft), parseFloat(req.body[i].textTop), {
-                    color: '#066099',
-                    fontSize: parseFloat(req.body[i].textSize),
-                    bold: true,
-                    font: req.body[i].pdfFont,
-                    opacity: 0.8
-                })
-            }
+
+  var pdfWriter = muhammara.createWriter(
+    __dirname + "/generated_pdfs/EmptyPages.pdf",
+    { version: muhammara.ePDFVersion14 }
+  );
+
+
+  for ( let j = 1; j <= PageC; j++){
+
+    var page = pdfWriter.createPage(0, 0, 595, 842);
+    var cxt = pdfWriter.startPageContentContext(page);
+
+    // change i to be currentline and set currentline = to i when break
+    for (let i = currentLine; i < req.body.length; i++){
+
+        var textOptions = {
+            font: pdfWriter.getFontForFile(
+                __dirname + "/public/fonts/sans-serif.ttf"
+            ),
+            size: parseFloat(req.body[i].textSize),
+            colorspace: "gray",
+            color: 0x00,
+            underline: true,
+        };
+        
+        
+        // if we are at a new to a new page
+        console.log(req.body[i].pdfPage);
+        if (req.body[i].pdfPage > j){
+            cxt
+            .writeText(req.body[i].pdfSent, parseFloat(req.body[i].textLeft), parseFloat(req.body[i].textTop), textOptions);
+            currentLine = i;
+            break;
         }
-        pdfDoc.endPage()
+        else{
+            // we'll need to keep track of i
+            //console.log(req.body[i].pdfSent, parseFloat(req.body[i].textLeft), parseFloat(req.body[i].textTop), textOptions);
+        }
+    }
+    pdfWriter.writePage(page);
+    pdfWriter.end();
     }
     PageC = 0;
-    pdfDoc.endPDF(()=>{});
+    pdfWriter.end(()=>{});
 });
 
 app.use(fileUpload());
