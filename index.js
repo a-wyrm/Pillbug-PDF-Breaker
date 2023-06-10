@@ -14,8 +14,7 @@ app.use(express.static(__dirname + '/css'));
 
 
 app.post("/get-PDF", (req, res) =>{
-
-   // we'll need to see how to sort the list and print it out based on that list
+  // we'll need to see how to sort the list and print it out based on that list
   // number of pages for pdf.
   let PageC = req.body[0].pdfNumofPages;
   let currentLine = 0;
